@@ -1,0 +1,3 @@
+name: talker
+main: club.plutomc.talker.bukkit.BukkitTalkerBootstrap
+version: 1.0-SNAPSHOT

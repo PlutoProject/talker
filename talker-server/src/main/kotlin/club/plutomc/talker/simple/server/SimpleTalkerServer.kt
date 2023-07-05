@@ -15,8 +15,15 @@ import io.netty.channel.EventLoopGroup
 import io.netty.channel.nio.NioEventLoopGroup
 import io.netty.channel.socket.SocketChannel
 import io.netty.channel.socket.nio.NioServerSocketChannel
+import org.slf4j.LoggerFactory
+import java.util.concurrent.Executors
+import kotlin.math.log
 
 class SimpleTalkerServer(private val port: Int): TalkerServer {
+
+    private val logger = LoggerFactory.getLogger("Talker Client")
+
+    private val executorService = Executors.newFixedThreadPool(4)
 
     private val bossGroup: EventLoopGroup
     private val workerGroup: EventLoopGroup
@@ -92,10 +99,14 @@ class SimpleTalkerServer(private val port: Int): TalkerServer {
         if (this.started)
             throw IllegalAccessException("The client has started")
         this.started = true
-        this.channelFuture.sync()
-        this.channelFuture.channel()
-            .closeFuture()
-            .sync()
+        this.executorService.execute {
+            logger.info("Started server")
+            this.channelFuture.sync()
+            this.channelFuture.channel()
+                .closeFuture()
+                .sync()
+            logger.info("Server closed")
+        }
     }
 
     override fun shutdown() {

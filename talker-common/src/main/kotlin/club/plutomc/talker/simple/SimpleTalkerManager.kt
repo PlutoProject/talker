@@ -1,6 +1,7 @@
 package club.plutomc.talker.simple
 
 import club.plutomc.talker.api.*
+import java.lang.Exception
 import java.lang.reflect.ParameterizedType
 
 class SimpleTalkerManager: TalkerManager {
@@ -59,11 +60,19 @@ class SimpleTalkerManager: TalkerManager {
                     boundReceivers.add(boundReceiver)
             }
             for (boundReceiver in boundReceivers) {
-                boundReceiver.receive(this, context, packet, any as Nothing)
+                try {
+                    boundReceiver.receive(this, context, packet, any as Nothing)
+                } catch (e: Exception) {
+                    boundReceiver.handleException(e)
+                }
             }
             for (receiver in this.receivers) {
                 reader.reset()
-                receiver.receive(this, context, packet, reader)
+                try {
+                    receiver.receive(this, context, packet, reader)
+                } catch (e: Exception) {
+                    receiver.handleException(e)
+                }
             }
         }
     }

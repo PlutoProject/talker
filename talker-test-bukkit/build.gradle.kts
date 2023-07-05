@@ -14,15 +14,13 @@ repositories {
 
 dependencies {
     compileOnly("org.spigotmc:spigot-api:1.20.1-R0.1-SNAPSHOT")
-    compileOnly("io.netty:netty-all:4.1.94.Final")
 
-    implementation(project(":talker-api"))
-    implementation(project(":talker-api-client"))
-    implementation(project(":talker-common"))
-    implementation(project(":talker-client")) {
-        exclude("io.netty:netty-all")
-    }
-    implementation(project(":talker-minecraft"))
+    compileOnly(project(":talker-api"))
+    compileOnly(project(":talker-api-client"))
+    compileOnly(project(":talker-common"))
+    compileOnly(project(":talker-client"))
+    compileOnly(project(":talker-minecraft"))
+    compileOnly(project(":talker-bukkit"))
 
     testImplementation(platform("org.junit:junit-bom:5.9.1"))
     testImplementation("org.junit.jupiter:junit-jupiter")

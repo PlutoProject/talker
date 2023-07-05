@@ -1,0 +1,4 @@
+name: talker-test
+main: club.plutomc.talker.test.bukkit.Main
+version: 1.0
+depend: [talker]

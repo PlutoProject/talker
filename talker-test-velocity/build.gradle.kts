@@ -14,15 +14,13 @@ repositories {
 
 dependencies {
     compileOnly("com.velocitypowered:velocity-api:3.1.1")
-    compileOnly("io.netty:netty-all:4.1.94.Final")
 
-    implementation(project(":talker-api"))
-    implementation(project(":talker-api-server"))
-    implementation(project(":talker-common"))
-    implementation(project(":talker-server")) {
-        exclude("io.netty:netty-all")
-    }
-    implementation(project(":talker-minecraft"))
+    compileOnly(project(":talker-api"))
+    compileOnly(project(":talker-api-server"))
+    compileOnly(project(":talker-common"))
+    compileOnly(project(":talker-server"))
+    compileOnly(project(":talker-minecraft"))
+    compileOnly(project(":talker-velocity"))
 
     kapt("com.velocitypowered:velocity-api:3.1.1")
 
