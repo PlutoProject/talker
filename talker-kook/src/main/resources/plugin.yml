@@ -1,0 +1,4 @@
+name: talker
+main: club.plutomc.talker.kook.KookTalkerBootstrap
+version: 1.0-SNAPSHOT
+api-version: '0.49.1'
