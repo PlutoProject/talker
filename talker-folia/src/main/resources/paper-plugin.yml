@@ -1,0 +1,5 @@
+name: talker
+version: 1.0-SNAPSHOT
+main: club.plutomc.talker.folia.FoliaTalkerBootstrap
+api-version: '1.20'
+bootstrapper: club.plutomc.talker.folia.TalkerPaperPluginBootstrapper
