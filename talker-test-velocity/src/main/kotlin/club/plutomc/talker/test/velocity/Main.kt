@@ -21,9 +21,13 @@ import java.nio.file.Path
     version = "1.0-SNAPSHOT",
     description = "Talker test for velocity proxy",
     authors = ["DeeChael"],
-    dependencies = [Dependency(id="talker")]
+    dependencies = [Dependency(id = "talker")]
 )
-class Main @Inject constructor(private val proxyServer: ProxyServer, private val logger: Logger, @DataDirectory private val dataDirectory: Path) {
+class Main @Inject constructor(
+    private val proxyServer: ProxyServer,
+    private val logger: Logger,
+    @DataDirectory private val dataDirectory: Path
+) {
 
     @Subscribe
     fun onProxyInitialization(event: ProxyInitializeEvent) {

@@ -7,9 +7,8 @@ import club.plutomc.talker.api.TalkerPacket
 import club.plutomc.talker.simple.SimpleTalkerReader
 import club.plutomc.talker.simple.SimpleTalkerWriter
 import com.google.gson.JsonParser
-import java.lang.Exception
 
-abstract class SampleReceiver(val provider: SampleListenerProvider): TalkerDataReceiver {
+abstract class SampleReceiver(val provider: SampleListenerProvider) : TalkerDataReceiver {
 
     override fun receive(manager: TalkerManager, context: TalkerContext, rawPacket: TalkerPacket, packet: Any) {
         val writer = SimpleTalkerWriter()

@@ -11,6 +11,7 @@ class SampleEvent(val context: TalkerContext, val data: SampleData) {
 
     fun send(data: SampleData) {
         context.send(TalkerService.getService("simple").createPacket { writer ->
+            writer.writeByte(0)
             writer.writeByte(127)
             writer.writeByte(0)
             writer.writeByte(64)

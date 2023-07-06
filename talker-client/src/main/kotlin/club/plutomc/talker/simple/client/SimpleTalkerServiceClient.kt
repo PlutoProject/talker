@@ -8,7 +8,7 @@ import club.plutomc.talker.simple.SimpleTalkerPacket
 import club.plutomc.talker.simple.SimpleTalkerWriter
 import java.net.InetAddress
 
-object SimpleTalkerServiceClient: TalkerServiceClient {
+object SimpleTalkerServiceClient : TalkerServiceClient {
 
     override fun createClient(name: String, address: InetAddress, port: Int): TalkerClient {
         return SimpleTalkerClient(name, address, port)

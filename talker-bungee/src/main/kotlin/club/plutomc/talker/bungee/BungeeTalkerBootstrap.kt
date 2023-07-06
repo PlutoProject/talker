@@ -14,7 +14,7 @@ import net.md_5.bungee.config.ConfigurationProvider
 import net.md_5.bungee.config.YamlConfiguration
 import java.io.File
 
-class BungeeTalkerBootstrap: Plugin(), SampleListenerProvider {
+class BungeeTalkerBootstrap : Plugin(), SampleListenerProvider {
 
     private val gson = Gson()
 
@@ -37,7 +37,8 @@ class BungeeTalkerBootstrap: Plugin(), SampleListenerProvider {
             ConfigurationProvider.getProvider(YamlConfiguration::class.java).save(defaultConfiguration, this.configFile)
         }
         this.config = ConfigurationProvider.getProvider(YamlConfiguration::class.java).load(this.configFile)
-        this.server = (TalkerService.getService("server") as TalkerServiceServer).createServer(this.config.getInt("port"))
+        this.server =
+            (TalkerService.getService("server") as TalkerServiceServer).createServer(this.config.getInt("port"))
         this.server.getManager().registerReceiver(object : SampleReceiver(this) {
             override fun receive0(listener: SampleListener, event: SampleEvent) {
                 ProxyServer.getInstance().scheduler.run {
@@ -68,6 +69,7 @@ class BungeeTalkerBootstrap: Plugin(), SampleListenerProvider {
 
     fun send(data: SampleData) {
         this.server.send(TalkerService.getService("simple").createPacket { writer ->
+            writer.writeByte(0)
             writer.writeByte(127)
             writer.writeByte(0)
             writer.writeByte(64)
@@ -83,6 +85,7 @@ class BungeeTalkerBootstrap: Plugin(), SampleListenerProvider {
 
     fun send(data: SampleData, filter: (List<ClientConnection>) -> List<ClientConnection>) {
         this.server.send(TalkerService.getService("simple").createPacket { writer ->
+            writer.writeByte(0)
             writer.writeByte(127)
             writer.writeByte(0)
             writer.writeByte(64)

@@ -20,6 +20,8 @@ interface TalkerReader {
 
     fun readString(charset: Charset, length: Int): String
 
+    fun readBytes(length: Int): ByteArray
+
     fun skip(length: Int)
 
     fun totalLength(): Int

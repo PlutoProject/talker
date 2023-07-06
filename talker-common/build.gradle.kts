@@ -10,6 +10,8 @@ repositories {
 }
 
 dependencies {
+    compileOnly("io.netty:netty-all:4.1.94.Final")
+
     implementation(project(":talker-api"))
 
     testImplementation(platform("org.junit:junit-bom:5.9.1"))

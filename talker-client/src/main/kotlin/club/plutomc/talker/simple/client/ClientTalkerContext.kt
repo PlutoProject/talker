@@ -9,7 +9,8 @@ import io.netty.channel.ChannelHandlerContext
 import java.lang.reflect.ParameterizedType
 import java.net.InetAddress
 
-class ClientTalkerContext(private val client: SimpleTalkerClient, private val context: ChannelHandlerContext): TalkerContext {
+class ClientTalkerContext(private val client: SimpleTalkerClient, private val context: ChannelHandlerContext) :
+    TalkerContext {
 
     override fun getAddress(): InetAddress {
         return this.client.getServer()

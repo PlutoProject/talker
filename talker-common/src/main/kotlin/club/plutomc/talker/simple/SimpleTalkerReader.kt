@@ -53,7 +53,7 @@ class SimpleTalkerReader(val content: ByteArray) : TalkerReader {
         this.offset += length
     }
 
-    private fun readBytes(length: Int): ByteArray {
+    override fun readBytes(length: Int): ByteArray {
         val byteList = mutableListOf<Byte>()
         for (i in 0 until length) {
             byteList.add(this.content[this.offset])

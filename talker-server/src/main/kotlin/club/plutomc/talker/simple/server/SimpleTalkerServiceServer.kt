@@ -7,7 +7,7 @@ import club.plutomc.talker.api.server.TalkerServiceServer
 import club.plutomc.talker.simple.SimpleTalkerPacket
 import club.plutomc.talker.simple.SimpleTalkerWriter
 
-object SimpleTalkerServiceServer: TalkerServiceServer {
+object SimpleTalkerServiceServer : TalkerServiceServer {
 
     override fun createServer(port: Int): TalkerServer {
         return SimpleTalkerServer(port)

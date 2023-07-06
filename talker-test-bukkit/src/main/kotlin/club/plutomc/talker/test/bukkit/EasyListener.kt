@@ -4,7 +4,7 @@ import club.plutomc.talker.minecraft.SampleEvent
 import club.plutomc.talker.minecraft.SampleListener
 import org.bukkit.Bukkit
 
-object EasyListener: SampleListener {
+object EasyListener : SampleListener {
 
     override fun receive(event: SampleEvent) {
         val data = event.data

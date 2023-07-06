@@ -1,10 +1,9 @@
 package club.plutomc.talker.simple
 
 import club.plutomc.talker.api.*
-import java.lang.Exception
 import java.lang.reflect.ParameterizedType
 
-class SimpleTalkerManager: TalkerManager {
+class SimpleTalkerManager : TalkerManager {
 
     private val serializers: MutableList<TalkerSerializer<Any>> = mutableListOf()
     private val deserializers: MutableList<TalkerDeserializer<Any>> = mutableListOf()
@@ -66,6 +65,15 @@ class SimpleTalkerManager: TalkerManager {
                     boundReceiver.handleException(e)
                 }
             }
+            for (receiver in this.receivers) {
+                reader.reset()
+                try {
+                    receiver.receive(this, context, packet, any)
+                } catch (e: Exception) {
+                    receiver.handleException(e)
+                }
+            }
+        } else {
             for (receiver in this.receivers) {
                 reader.reset()
                 try {

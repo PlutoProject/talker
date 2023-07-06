@@ -17,11 +17,10 @@ import io.netty.channel.socket.SocketChannel
 import io.netty.channel.socket.nio.NioServerSocketChannel
 import org.slf4j.LoggerFactory
 import java.util.concurrent.Executors
-import kotlin.math.log
 
-class SimpleTalkerServer(private val port: Int): TalkerServer {
+class SimpleTalkerServer(private val port: Int) : TalkerServer {
 
-    private val logger = LoggerFactory.getLogger("Talker Client")
+    val logger = LoggerFactory.getLogger("Talker Client")
 
     private val executorService = Executors.newFixedThreadPool(4)
 
@@ -39,7 +38,6 @@ class SimpleTalkerServer(private val port: Int): TalkerServer {
     private val clients: MutableList<SimpleClientConnection> = mutableListOf()
 
     init {
-
         this.bossGroup = NioEventLoopGroup()
         this.workerGroup = NioEventLoopGroup();
         this.serverBootstrap = ServerBootstrap()
@@ -50,11 +48,11 @@ class SimpleTalkerServer(private val port: Int): TalkerServer {
             .childHandler(object : ChannelInitializer<SocketChannel>() {
                 override fun initChannel(channel: SocketChannel) {
                     val connection = SimpleClientConnection(this@SimpleTalkerServer, "", channel)
-                    channel.pipeline()
-                        .addLast(connection)
+                    channel.pipeline().addLast(connection)
+                    this@SimpleTalkerServer.clients.add(connection)
                 }
             })
-            this.channelFuture = this.serverBootstrap.bind(this.port)
+        this.channelFuture = this.serverBootstrap.bind(this.port)
     }
 
     override fun listClients(): List<SimpleClientConnection> {
@@ -95,6 +93,15 @@ class SimpleTalkerServer(private val port: Int): TalkerServer {
         return this.port
     }
 
+    override fun disconnect(client: ClientConnection) {
+        client as SimpleClientConnection
+        if (client.channel.isActive) {
+            client.channel.disconnect()
+            client.channel.close()
+        }
+        this.clients.remove(client)
+    }
+
     override fun start() {
         if (this.started)
             throw IllegalAccessException("The client has started")
@@ -106,6 +113,7 @@ class SimpleTalkerServer(private val port: Int): TalkerServer {
                 .closeFuture()
                 .sync()
             logger.info("Server closed")
+            this.shutdown()
         }
     }
 

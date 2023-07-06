@@ -5,7 +5,7 @@ import club.plutomc.talker.api.TalkerWriter
 import java.nio.ByteBuffer
 import java.nio.charset.Charset
 
-class SimpleTalkerWriter: TalkerWriter {
+class SimpleTalkerWriter : TalkerWriter {
 
     private val content: MutableList<Byte> = mutableListOf()
 
@@ -102,7 +102,7 @@ class SimpleTalkerWriter: TalkerWriter {
     override fun fill(length: Int) {
         if (this.content.size >= length)
             return
-        for (i in 0 until (length - this.content.size))  {
+        for (i in 0 until (length - this.content.size)) {
             this.content.add(0)
         }
     }

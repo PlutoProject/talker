@@ -4,13 +4,15 @@ import club.plutomc.talker.api.TalkerPacket
 import club.plutomc.talker.api.server.ClientConnection
 import club.plutomc.talker.simple.SimpleTalkerPacket
 import club.plutomc.talker.simple.SimpleTalkerWriter
+import club.plutomc.talker.simple.util.NettyUtil
 import io.netty.buffer.ByteBuf
 import io.netty.buffer.Unpooled
 import io.netty.channel.Channel
 import io.netty.channel.ChannelHandlerContext
 import io.netty.channel.ChannelInboundHandlerAdapter
 
-class SimpleClientConnection(private val server: SimpleTalkerServer, private var name: String, val channel: Channel): ClientConnection,
+class SimpleClientConnection(private val server: SimpleTalkerServer, private var name: String, val channel: Channel) :
+    ClientConnection,
     ChannelInboundHandlerAdapter() {
 
     override fun getName(): String {
@@ -27,31 +29,40 @@ class SimpleClientConnection(private val server: SimpleTalkerServer, private var
     }
 
     override fun channelActive(ctx: ChannelHandlerContext) {
+        this.server.logger.info("A client connected successfully, trying to fetch its name")
         val writer = SimpleTalkerWriter()
         writer.writeByte(1)
         writer.writeByte(0)
-        ctx.channel().writeAndFlush(Unpooled.wrappedBuffer(writer.toByteArray()))
+        this.channel.writeAndFlush(Unpooled.wrappedBuffer(writer.toByteArray()))
+    }
+
+    override fun channelInactive(ctx: ChannelHandlerContext) {
+        this.server.logger.info("Client ${this.name} disconnected")
+        this.server.disconnect(this)
     }
 
     override fun channelRead(ctx: ChannelHandlerContext, msg: Any) {
-        if (msg !is ByteBuf)
-            return
-        val first = msg.readByte()
+        msg as ByteBuf
+        val reader = NettyUtil.castByteBufToTalkerReader(msg)
+        val first = reader.readByte()
         if (first == 1.toByte()) {
-            val second = msg.readByte()
+            val second = reader.readByte()
             if (second == 0.toByte()) {
-                val length = msg.readInt()
-                val name = String(msg.readBytes(length).array(), Charsets.UTF_8)
+                val length = reader.readInt()
+                val name = String(reader.readBytes(length), Charsets.UTF_8)
                 this.name = name
+                this.server.logger.info("Client $name connected")
             }
         } else if (first == 0.toByte()) {
             val packet = SimpleTalkerPacket()
             val writer = SimpleTalkerWriter()
-            writer.append(msg.readBytes(msg.readableBytes()).array())
+            writer.append(reader.readBytes(reader.availableLength()))
             packet.fromWriter(writer)
             this.server.getManager().receive(ServerTalkerContext(this.server, ctx), packet)
         }
+    }
 
+    override fun channelReadComplete(ctx: ChannelHandlerContext?) {
     }
 
 }

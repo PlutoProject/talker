@@ -1,10 +1,8 @@
-
 rootProject.name = "talker"
 include("talker-bukkit")
 include("talker-common")
 include("talker-velocity")
 include("talker-bungee")
-include("talker-paper")
 include("talker-api")
 include("talker-server")
 include("talker-client")

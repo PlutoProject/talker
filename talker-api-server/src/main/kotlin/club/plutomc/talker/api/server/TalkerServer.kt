@@ -15,6 +15,8 @@ interface TalkerServer {
 
     fun getPort(): Int
 
+    fun disconnect(client: ClientConnection)
+
     fun start()
 
     fun shutdown()

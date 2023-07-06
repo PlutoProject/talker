@@ -10,7 +10,8 @@ import java.lang.reflect.ParameterizedType
 import java.net.InetAddress
 import java.net.InetSocketAddress
 
-class ServerTalkerContext(private val server: SimpleTalkerServer, private val context: ChannelHandlerContext): TalkerContext {
+class ServerTalkerContext(private val server: SimpleTalkerServer, private val context: ChannelHandlerContext) :
+    TalkerContext {
 
     override fun getAddress(): InetAddress {
         val remote = context.channel().remoteAddress()

@@ -30,7 +30,11 @@ import java.nio.file.Path
     description = "Talker server bootstrap for velocity proxy",
     authors = ["DeeChael"]
 )
-class VelocityTalkerBootstrap @Inject constructor(private val proxyServer: ProxyServer, private val logger: Logger, @DataDirectory private val dataDirectory: Path): SampleListenerProvider {
+class VelocityTalkerBootstrap @Inject constructor(
+    private val proxyServer: ProxyServer,
+    private val logger: Logger,
+    @DataDirectory private val dataDirectory: Path
+) : SampleListenerProvider {
 
     private val gson = Gson()
 
@@ -60,7 +64,8 @@ class VelocityTalkerBootstrap @Inject constructor(private val proxyServer: Proxy
         this.config = JsonParser.parseReader(reader).asJsonObject
         reader.close()
 
-        this.server = (TalkerService.getService("server") as TalkerServiceServer).createServer(this.config["port"].asInt)
+        this.server =
+            (TalkerService.getService("server") as TalkerServiceServer).createServer(this.config["port"].asInt)
         this.server.getManager().registerReceiver(object : SampleReceiver(this) {
             override fun receive0(listener: SampleListener, event: SampleEvent) {
                 this@VelocityTalkerBootstrap.proxyServer.scheduler.buildTask(this@VelocityTalkerBootstrap) {
@@ -92,6 +97,7 @@ class VelocityTalkerBootstrap @Inject constructor(private val proxyServer: Proxy
 
     fun send(data: SampleData) {
         this.server.send(TalkerService.getService("simple").createPacket { writer ->
+            writer.writeByte(0)
             writer.writeByte(127)
             writer.writeByte(0)
             writer.writeByte(64)
@@ -107,6 +113,7 @@ class VelocityTalkerBootstrap @Inject constructor(private val proxyServer: Proxy
 
     fun send(data: SampleData, filter: (List<ClientConnection>) -> List<ClientConnection>) {
         this.server.send(TalkerService.getService("simple").createPacket { writer ->
+            writer.writeByte(0)
             writer.writeByte(127)
             writer.writeByte(0)
             writer.writeByte(64)

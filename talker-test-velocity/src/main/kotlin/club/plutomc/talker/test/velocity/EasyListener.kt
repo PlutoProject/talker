@@ -5,7 +5,7 @@ import club.plutomc.talker.minecraft.SampleListener
 import com.velocitypowered.api.proxy.ProxyServer
 import net.kyori.adventure.text.Component
 
-class EasyListener(val server: ProxyServer): SampleListener {
+class EasyListener(val server: ProxyServer) : SampleListener {
 
     override fun receive(event: SampleEvent) {
         val data = event.data

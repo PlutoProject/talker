@@ -2,15 +2,14 @@ package club.plutomc.talker.simple.client
 
 import club.plutomc.talker.api.TalkerManager
 import club.plutomc.talker.api.TalkerPacket
-import club.plutomc.talker.api.client.ServerConnection
 import club.plutomc.talker.api.client.TalkerClient
 import club.plutomc.talker.simple.SimpleTalkerManager
 import club.plutomc.talker.simple.SimpleTalkerWriter
 import io.netty.bootstrap.Bootstrap
 import io.netty.buffer.Unpooled
-import io.netty.channel.Channel
 import io.netty.channel.ChannelFuture
 import io.netty.channel.ChannelInitializer
+import io.netty.channel.ChannelOption
 import io.netty.channel.nio.NioEventLoopGroup
 import io.netty.channel.socket.SocketChannel
 import io.netty.channel.socket.nio.NioSocketChannel
@@ -18,16 +17,17 @@ import org.slf4j.LoggerFactory
 import java.net.InetAddress
 import java.util.concurrent.Executors
 
-class SimpleTalkerClient(private val name: String, private val address: InetAddress, private val port: Int): TalkerClient {
+class SimpleTalkerClient(private val name: String, private val address: InetAddress, private val port: Int) :
+    TalkerClient {
 
-    private val logger = LoggerFactory.getLogger("Talker Client")
+    val logger = LoggerFactory.getLogger("Talker Client")
 
     private val executorService = Executors.newFixedThreadPool(4)
 
     private val nioEventLoopGroup: NioEventLoopGroup
     private val bootstrap: Bootstrap
 
-    private var clientChannel: ChannelFuture
+    private lateinit var clientChannel: ChannelFuture
     private lateinit var serverConnection: SimpleServerConnection
 
     private val manager: TalkerManager = SimpleTalkerManager()
@@ -40,12 +40,18 @@ class SimpleTalkerClient(private val name: String, private val address: InetAddr
         this.bootstrap = Bootstrap()
         this.bootstrap.group(this.nioEventLoopGroup)
             .channel(NioSocketChannel::class.java)
+            .option(ChannelOption.SO_KEEPALIVE, true)
             .handler(object : ChannelInitializer<SocketChannel>() {
                 override fun initChannel(channel: SocketChannel) {
-                    this@SimpleTalkerClient.serverConnection = SimpleServerConnection(this@SimpleTalkerClient, channel)
+                    try {
+                        val connection = SimpleServerConnection(this@SimpleTalkerClient, channel)
+                        channel.pipeline().addLast(connection)
+                        this@SimpleTalkerClient.serverConnection = connection
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                    }
                 }
             })
-        this.clientChannel = this.bootstrap.connect(this.address, this.port)
     }
 
     override fun getServer(): InetAddress {
@@ -84,7 +90,9 @@ class SimpleTalkerClient(private val name: String, private val address: InetAddr
         this.started = true
         this.executorService.execute {
             logger.info("Started client")
-            this.clientChannel.sync()
+            this.clientChannel = this.bootstrap
+                .connect(this.address, this.port)
+                .sync()
             this.clientChannel.channel()
                 .closeFuture()
                 .sync()

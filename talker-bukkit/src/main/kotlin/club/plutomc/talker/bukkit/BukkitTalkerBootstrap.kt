@@ -6,12 +6,11 @@ import club.plutomc.talker.api.client.TalkerServiceClient
 import club.plutomc.talker.minecraft.*
 import com.google.gson.Gson
 import com.google.gson.JsonObject
-import org.bukkit.Bukkit
 import org.bukkit.plugin.java.JavaPlugin
 import org.bukkit.scheduler.BukkitRunnable
 import java.net.Inet4Address
 
-class BukkitTalkerBootstrap: JavaPlugin(), SampleListenerProvider {
+class BukkitTalkerBootstrap : JavaPlugin(), SampleListenerProvider {
 
     private val gson = Gson()
 
@@ -22,7 +21,12 @@ class BukkitTalkerBootstrap: JavaPlugin(), SampleListenerProvider {
     override fun onLoad() {
         this.saveDefaultConfig()
         this.reloadConfig()
-        this.client = (TalkerService.getService("client") as TalkerServiceClient).createClient(this.config.getString("name", "")!!, Inet4Address.getByName(this.config.getString("host")),this.config.getInt("port"))
+        this.client = (TalkerService.getService("client") as TalkerServiceClient).createClient(
+            this.config.getString(
+                "name",
+                ""
+            )!!, Inet4Address.getByName(this.config.getString("host")), this.config.getInt("port")
+        )
         this.client.getManager().registerReceiver(object : SampleReceiver(this) {
             override fun receive0(listener: SampleListener, event: SampleEvent) {
                 object : BukkitRunnable() {
@@ -54,6 +58,7 @@ class BukkitTalkerBootstrap: JavaPlugin(), SampleListenerProvider {
 
     fun send(data: SampleData) {
         this.client.send(TalkerService.getService("simple").createPacket { writer ->
+            writer.writeByte(0)
             writer.writeByte(127)
             writer.writeByte(0)
             writer.writeByte(64)

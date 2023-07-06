@@ -28,6 +28,11 @@ dependencies {
     testImplementation("org.junit.jupiter:junit-jupiter")
 }
 
+tasks.shadowJar {
+    exclude("io.netty.*")
+    exclude("org.jetbrains.*")
+}
+
 tasks.test {
     useJUnitPlatform()
 }
