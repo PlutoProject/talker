@@ -36,13 +36,6 @@ subprojects {
         apply {
             apply(plugin = "maven-publish")
 
-            /*repositories {
-                maven {
-                    url = uri("https://nexus.nostaldaisuki.cc/repository/maven-releases/")
-                }
-            }*/
-
-
             publishing {
                 configure<PublishingExtension> {
                     publications.create<MavenPublication>(name) {
