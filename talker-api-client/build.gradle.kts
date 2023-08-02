@@ -2,7 +2,7 @@ plugins {
     id("java")
 }
 
-group = "club.plutomc"
+group = "club.plutomc.talker"
 version = "1.0-SNAPSHOT"
 
 repositories {
@@ -10,10 +10,10 @@ repositories {
 }
 
 dependencies {
-    implementation(project(":talker-api"))
+    api(project(":talker-api"))
 
-    testImplementation(platform("org.junit:junit-bom:5.9.1"))
-    testImplementation("org.junit.jupiter:junit-jupiter")
+    testApi(platform("org.junit:junit-bom:5.9.1"))
+    testApi("org.junit.jupiter:junit-jupiter")
 }
 
 tasks.test {
