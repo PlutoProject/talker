@@ -10,10 +10,10 @@ repositories {
 }
 
 dependencies {
-    api(project(":talker-api"))
+    implementation(project(":talker-api"))
 
-    testApi(platform("org.junit:junit-bom:5.9.1"))
-    testApi("org.junit.jupiter:junit-jupiter")
+    testImplementation(platform("org.junit:junit-bom:5.9.1"))
+    testImplementation("org.junit.jupiter:junit-jupiter")
 }
 
 tasks.test {
