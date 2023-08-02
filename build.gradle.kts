@@ -28,8 +28,8 @@ allprojects {
 
 val apis = listOf("talker-api", "talker-api-client", "talker-api-server", "talker-bukkit", "talker-velocity", "talker-bungee")
 
-val repoUser: String = System.getenv("TALKER_MAVEN_USER")
-val repoPwd: String = System.getenv("TALKER_MAVEN_PASSWORD")
+val repoUser: String = System.getenv("MAVEN_USER")
+val repoPwd: String = System.getenv("MAVEN_PASSWORD")
 
 subprojects {
     if (apis.contains(name)) {
